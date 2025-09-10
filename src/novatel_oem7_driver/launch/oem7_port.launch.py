@@ -64,7 +64,12 @@ def generate_launch_description():
                     'oem7_odometry_transform' : False,
 
                     # Debug/Other Parameters
-                    'oem7_receiver_log_file' : '',
+                    #------------------------------------
+                    #NavINST changes
+                    # 'oem7_receiver_log_file' : '',
+                    'oem7_receiver_log_file' : LaunchConfiguration('oem7_receiver_log_file'),
+                    #------------------------------------
+
                     'oem7_decoder_log_file' : '',
                     'oem7_strict_receiver_init' : True,
                     'oem7_publish_unknown_oem7raw' : False,
@@ -76,9 +81,13 @@ def generate_launch_description():
         output='screen'
     )
     
-    return LaunchDescription([
-                             arg('oem7_port_name', None,  'Serial Port Name, e.g. /dev/ttyUSB1'), 
-                             arg('oem7_port_baud', '9600',  'Serial Port Baud, e.g. 115200'), 
-                             node
-                             ])
+        return LaunchDescription([
+                            arg('oem7_port_name', None,  'Serial Port Name, e.g. /dev/ttyUSB1'), 
+                            arg('oem7_port_baud', '9600',  'Serial Port Baud, e.g. 115200'), 
+                            #------------------------------------
+                            #NavINST changes
+                            arg('oem7_receiver_log_file', '', 'Receiver log file path'),
+                            #------------------------------------
+                            node
+                            ])
 

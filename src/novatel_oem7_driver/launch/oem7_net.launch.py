@@ -65,7 +65,10 @@ def generate_launch_description():
                     'oem7_odometry_transform' : False,
 
                     # Debug/Other Parameters
-                    'oem7_receiver_log_file' : '',
+                    #------------------------------------
+                    #NavINST changes
+                    'oem7_receiver_log_file' : LaunchConfiguration('oem7_receiver_log_file'),
+                    #------------------------------------
                     'oem7_decoder_log_file' : '',
                     'oem7_strict_receiver_init' : True,
                     'oem7_publish_unknown_oem7raw' : False,
@@ -81,7 +84,10 @@ def generate_launch_description():
     ip_arg   = arg('oem7_ip_addr', None,               'IP Address of Oem7 Receiver, e.g. 192.168.1.2')
     port_arg = arg('oem7_port',   '3001',              'TCP or UDP port, e.g. 3002')
     if_arg   = arg('oem7_if',     'Oem7ReceiverTcp',   'Interface Type: Oem7ReceiverTcp or Oem7ReceiverUdp')
-    
+    #------------------------------------
+    #NavINST changes
+    oem7_receiver_log_file=arg('oem7_receiver_log_file', '', 'Receiver log file path'),
+    #------------------------------------
     return LaunchDescription([ip_arg, port_arg, if_arg, 
                               node])
 

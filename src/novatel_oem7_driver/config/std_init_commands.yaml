@@ -39,13 +39,16 @@ receiver_init_commands:
 #-----------------------------------------------------------------------------------------------------
 # Reset logging
 
-- "UNLOGALL THISPORT"
+- "UNLOGALL"
+#- "UNLOGALL THISPORT"
+#- If connecting with external IMU, use CONNECTIMU command:
+#- "CONNECTIMU IMUPort IMUType"
 #- "FRESET"
 #- "!PAUSE 10"
 
 # INS Setup Commands - refer to https://docs.novatel.com/OEM7/Content/SPAN_Operation/SPAN_Operation.htm?tocpath=Operation%7CSPAN%20Operation%7C_____0
 # for INS setup help.
-#- "SETINSPROFILE LAND"
+- "SETINSPROFILE LAND"
 # IMU offsets (SETINSTRANSLATION command). If using SPAN then these must be entered precisely.
 #    * ANT1 is the IMU to Primary GNSS antenna offset and MUST be entered precisely for proper INS
 #       functioning. 
@@ -53,26 +56,40 @@ receiver_init_commands:
 #    * USER offsets the INS position from its default center of IMU to a specified location. To make INS positions match
 #       the GNSS (BESTPOS, GPSFix etc.) outputting at antenna center then set this equal to ANT1.
 #- "SETINSTRANSLATION ANT 1 <x> <y> <z> <std. x> <std. y> <std. z>
+# VIMP to Calibrate These values
+- "SETINSTRANSLATION ANT1 0.11 -0.22 0.11 0.02 0.02 0.02"
+- "SETINSTRANSLATION ANT2 0.11 -0.22 0.11 0.02 0.02 0.02"
+
 #- "SETINSTRANSLATION USER <x> <y> <z> 
 # INS rotation offsets (SETINSROTATION command) 
 #    * RBV (rotation from IMU body to vehcile) should be entered if the IMU is not aligned y-forward with the vehicle 
 #       or calibrated even if it is for small rotational offsets
 #- "SETINSROTATION RBV <x> <y> <z> <std. x> <std. y> <std. z>
-
+# VIMP to Calibrate These values
+- "SETINSROTATION RBV 0 0 0 0.1 0.1 0.1"
 #- ... etc.
 
+- "dualantennaalign enable 10 1"
+- "headingoffset 0 0"
 
+# Useful outputs
+- "log "dualantennaheadinga ontime 1"      # fast, synchronous heading/pitch
+- "log heading2a ontime 1"                 # general ALIGN heading/pitch
+- "log alignbslnxyza onnew "               # ECEF baseline vector
+- "log alignbslnenua onnew "               # ENU baseline (easy to read)
+- "log headingsatsa onnew  "               # sats used in heading solution
+- "log gphdtdualantennaa ontime 1"         # NMEA True heading (sync), for autopilots
+- "log bestposa ontime 1"                  # primary antenna position (debug)
 #-------------------------------------------------------------------------------------------------------
 # Standard Logging Requests
 
 #----------------------------
 # Status & Config
+
 - "LOG INSCONFIGB ONCE"  # Log once to obtain initial configuration. Do not remove, needed for IMU messages.
-- "LOG TERRASTARINFOB ONCE"
-- "LOG TERRASTARSTATUSB ONCE"
+- "LOG INSCONFIGB ONTIME 300" # Periodic update.
 - "LOG TERRASTARINFOB ONTIME 300" # Periodic update.
-- "LOG TERRASTARSTATUSB ONTIME 300"
-- "LOG INSCONFIGB ONTIME 300" 
+- "LOG TERRASTARSTATUSB ONTIME 300" # Periodic update.
 - "LOG RXSTATUSB ONCHANGED"
 
 # GNSS and INS Solutions
@@ -80,31 +97,59 @@ receiver_init_commands:
 # Do not remove these messages -------------------------------------------------------------------------- 
 - "LOG BESTPOSB ONTIME 0.1" 
 - "LOG BESTVELB ONTIME 0.1" 
-- "LOG BESTGNSSVELB ONTIME 0.1"
 - "LOG BESTUTMB ONTIME 1"
-- "LOG BESTGNSSPOSB ONTIME 0.1"
 - "LOG PPPPOSB ONTIME 1"
 - "LOG HEADING2B ONNEW"
 - "LOG PSRDOP2B ONCHANGED"
 - "LOG INSPVASB ONTIME 0.02"
 - "LOG INSPVAXB ONTIME 1"
-- "LOG CORRIMUSB ONTIME 0.01"
+- "LOG CORRIMUSB ONTIME 0.01" # Change logging rate according to IMU rate required
 - "LOG INSSTDEVB ONTIME 1"
+- "LOG BESTGNSSPOSB ONTIME 0.1"
 - "LOG RAWIMUSXB ONNEW"
+
 #----------------------------------------------------------------------------------------------------------
 
-- "LOG TIMEB ONTIME 1" # Can be used as a 'heartbeat' message.
+- "LOG TIMEB ONTIME 0.1" # Can be used as a 'heartbeat' message.
 
 # Post-Processing Messages; not directly used to generate ROS messages.
-- "LOG VERSIONB ONCE"
+#- "LOG INSUPDATESTATUSB ONNEW"
+#- "LOG RAWEPHEMB ONNEW"
+#- "LOG GLOEPHEMERISB ONNEW"
+#- "LOG BDSEPHEMERISB ONNEW"
+#- "LOG GALFNAVEPHEMERISB ONNEW"
+#- "LOG GALINAVEPHEMERISB ONNEW"
+#- "LOG RANGEB ONTIME 1"
+
+
+
+# Navinst
 - "LOG INSUPDATESTATUSB ONNEW"
-- "LOG RAWEPHEMB ONNEW"
-- "LOG GLOEPHEMERISB ONNEW"
-- "LOG BDSEPHEMERISB ONNEW"
-- "LOG GALFNAVEPHEMERISB ONNEW"
-- "LOG GALINAVEPHEMERISB ONNEW"
+- "LOG BESTGNSSVELB ONTIME 1"
+#- "LOG BESTGNSSPOSB ONTIME 1"
+#- "LOG BESTPOSB ONTIME 1"
+#- "LOG BESTVELB ONTIME 1"
+#- "LOG INSPVASB ONTIME 0.05"
+- "LOG RAWIMUSB ONNEW"
+- "LOG SATVIS2B ONNEW"
 - "LOG RANGEB ONTIME 1"
-# - "LOG RANGEB_1 ONTIME 1" # It is recommended to include this log if you are using a dual antenna setup
+- "LOG RANGECMPB ONTIME 1"
+- "LOG RAWEPHEMB ONNEW"
+- "LOG GPSEPHEMB ONNEW"
+- "LOG BDSEPHEMERISB ONNEW"
+- "LOG GLOEPHEMERISB ONNEW"
+- "LOG GALFNAVEPHEMERISB ONNEW"
+- "LOG GALFNAVRAWEPHEMERISB ONNEW"
+- "LOG GALINAVEPHEMERISB ONNEW"
+- "LOG GALINAVRAWEPHEMERISB ONNEW"
+- "LOG QZSSEPHEMERISB ONNEW"
+- "LOG GALIONOB ONNEW"
+- "LOG PSRPOSB ONTIME 1"
+- "LOG PSRVELB ONTIME 1"
+- "LOG PSRDOPB ONTIME 1"
+- "LOG IONUTCB ONNEW"
+- "LOG SATXYZ2B ONTIME 1"
+- "LOG INSATTQSB ONTIME 0.02"
 
 
 
