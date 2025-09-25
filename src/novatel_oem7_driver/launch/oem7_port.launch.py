@@ -81,13 +81,13 @@ def generate_launch_description():
         output='screen'
     )
     
-        return LaunchDescription([
-                            arg('oem7_port_name', None,  'Serial Port Name, e.g. /dev/ttyUSB1'), 
-                            arg('oem7_port_baud', '9600',  'Serial Port Baud, e.g. 115200'), 
-                            #------------------------------------
-                            #NavINST changes
-                            arg('oem7_receiver_log_file', '', 'Receiver log file path'),
-                            #------------------------------------
-                            node
-                            ])
+    return LaunchDescription([
+                        arg('oem7_port_name', None,  'Serial Port Name, e.g. /dev/ttyUSB1'), 
+                        arg('oem7_port_baud', '9600',  'Serial Port Baud, e.g. 115200'), 
+                        #------------------------------------
+                        #NavINST changes
+                        arg('oem7_receiver_log_file', '', 'Receiver log file path'),
+                        #------------------------------------
+                        node
+                        ])
 

@@ -57,8 +57,8 @@ receiver_init_commands:
 #       the GNSS (BESTPOS, GPSFix etc.) outputting at antenna center then set this equal to ANT1.
 #- "SETINSTRANSLATION ANT 1 <x> <y> <z> <std. x> <std. y> <std. z>
 # VIMP to Calibrate These values
-- "SETINSTRANSLATION ANT1 0.11 -0.22 0.11 0.02 0.02 0.02"
-- "SETINSTRANSLATION ANT2 0.11 -0.22 0.11 0.02 0.02 0.02"
+- "SETINSTRANSLATION ANT1 -0.85 -1.05 0.57 0.1 0.1 0.1"
+- "SETINSTRANSLATION ANT2 -0.85 -1.05 -0.57 0.1 0.1 0.1"
 
 #- "SETINSTRANSLATION USER <x> <y> <z> 
 # INS rotation offsets (SETINSROTATION command) 
@@ -66,20 +66,20 @@ receiver_init_commands:
 #       or calibrated even if it is for small rotational offsets
 #- "SETINSROTATION RBV <x> <y> <z> <std. x> <std. y> <std. z>
 # VIMP to Calibrate These values
-- "SETINSROTATION RBV 0 0 0 0.1 0.1 0.1"
+# - "SETINSROTATION RBV 0 0 0 0.1 0.1 0.1"
 #- ... etc.
 
-- "dualantennaalign enable 10 1"
+- "dualantennaalign enable 20 20"
 - "headingoffset 0 0"
 
 # Useful outputs
-- "log "dualantennaheadinga ontime 1"      # fast, synchronous heading/pitch
-- "log heading2a ontime 1"                 # general ALIGN heading/pitch
-- "log alignbslnxyza onnew "               # ECEF baseline vector
-- "log alignbslnenua onnew "               # ENU baseline (easy to read)
-- "log headingsatsa onnew  "               # sats used in heading solution
-- "log gphdtdualantennaa ontime 1"         # NMEA True heading (sync), for autopilots
-- "log bestposa ontime 1"                  # primary antenna position (debug)
+- "log dualantennaheadingb ontime 0.1"      # fast, synchronous heading/pitch
+# - "log heading2a ontime 1"                 # general ALIGN heading/pitch
+- "log alignbslnxyzb onnew "               # ECEF baseline vector
+- "log alignbslnenub onnew "               # ENU baseline (easy to read)
+- "log headingsatsb onnew  "               # sats used in heading solution
+- "log gphdtdualantennab ontime 0.1"         # NMEA True heading (sync), for autopilots
+# - "log bestposa ontime 1"                  # primary antenna position (debug)
 #-------------------------------------------------------------------------------------------------------
 # Standard Logging Requests
 
@@ -87,10 +87,14 @@ receiver_init_commands:
 # Status & Config
 
 - "LOG INSCONFIGB ONCE"  # Log once to obtain initial configuration. Do not remove, needed for IMU messages.
-- "LOG INSCONFIGB ONTIME 300" # Periodic update.
+- "LOG INSCONFIGB ONCHANGED" # Periodic update.
 - "LOG TERRASTARINFOB ONTIME 300" # Periodic update.
 - "LOG TERRASTARSTATUSB ONTIME 300" # Periodic update.
 - "LOG RXSTATUSB ONCHANGED"
+- "LOG VERSIONB ONCE"
+- "LOG RXCONFIGB ONCE"
+- "LOG THISANTENNATYPEB ONCE"
+
 
 # GNSS and INS Solutions
 
@@ -125,12 +129,12 @@ receiver_init_commands:
 
 # Navinst
 - "LOG INSUPDATESTATUSB ONNEW"
-- "LOG BESTGNSSVELB ONTIME 1"
+- "LOG BESTGNSSVELB ONTIME 0.1"
 #- "LOG BESTGNSSPOSB ONTIME 1"
 #- "LOG BESTPOSB ONTIME 1"
 #- "LOG BESTVELB ONTIME 1"
 #- "LOG INSPVASB ONTIME 0.05"
-- "LOG RAWIMUSB ONNEW"
+# - "LOG RAWIMUSB ONNEW"
 - "LOG SATVIS2B ONNEW"
 - "LOG RANGEB ONTIME 1"
 - "LOG RANGECMPB ONTIME 1"
