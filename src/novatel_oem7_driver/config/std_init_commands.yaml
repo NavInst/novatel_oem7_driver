@@ -42,9 +42,9 @@ receiver_init_commands:
 - "UNLOGALL"
 #- "UNLOGALL THISPORT"
 #- If connecting with external IMU, use CONNECTIMU command:
-#- "CONNECTIMU IMUPort IMUType"
+- "CONNECTIMU COM2 LITEF_MICROIMU"
 #- "FRESET"
-#- "!PAUSE 10"
+- "!PAUSE 5"
 
 # INS Setup Commands - refer to https://docs.novatel.com/OEM7/Content/SPAN_Operation/SPAN_Operation.htm?tocpath=Operation%7CSPAN%20Operation%7C_____0
 # for INS setup help.
@@ -57,8 +57,9 @@ receiver_init_commands:
 #       the GNSS (BESTPOS, GPSFix etc.) outputting at antenna center then set this equal to ANT1.
 #- "SETINSTRANSLATION ANT 1 <x> <y> <z> <std. x> <std. y> <std. z>
 # VIMP to Calibrate These values
-- "SETINSTRANSLATION ANT1 -0.85 -1.05 0.57 0.1 0.1 0.1"
-- "SETINSTRANSLATION ANT2 -0.85 -1.05 -0.57 0.1 0.1 0.1"
+# ANT1 in the center back position, ANT2 in the front right position
+- "SETINSTRANSLATION ANT1 -1.0021 -0.4733 -0.0022 0.0563 0.0152 0.0159"
+- "SETINSTRANSLATION ANT2 -0.9412 -1.5987 -0.5655 0.0388 0.0195 0.0198"
 
 #- "SETINSTRANSLATION USER <x> <y> <z> 
 # INS rotation offsets (SETINSROTATION command) 
@@ -66,11 +67,16 @@ receiver_init_commands:
 #       or calibrated even if it is for small rotational offsets
 #- "SETINSROTATION RBV <x> <y> <z> <std. x> <std. y> <std. z>
 # VIMP to Calibrate These values
-# - "SETINSROTATION RBV 0 0 0 0.1 0.1 0.1"
+- "SETINSROTATION  RBV 0.3479 90.83735 -179.9086 0.6095 0.85105 0.25505"
+
 #- ... etc.
 
 - "dualantennaalign enable 20 20"
 - "headingoffset 0 0"
+
+
+# For enabling TERRASTAR
+- "ASSIGNLBANDBEAM auto"
 
 # Useful outputs
 - "log dualantennaheadingb ontime 0.1"      # fast, synchronous heading/pitch
@@ -153,6 +159,7 @@ receiver_init_commands:
 - "LOG PSRDOPB ONTIME 1"
 - "LOG IONUTCB ONNEW"
 - "LOG SATXYZ2B ONTIME 1"
+- "LOG SATXYZVEB ONTIME 1"
 - "LOG INSATTQSB ONTIME 0.02"
 
 
